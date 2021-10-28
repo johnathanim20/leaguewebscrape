@@ -1,3 +1,9 @@
+'''
+set FLASK_APP=src/api
+flask run
+@author: Whoat
+'''
+
 import datetime
 import requests
 import json
@@ -29,3 +35,98 @@ def getAllChampions():
         'counter_champs' : champ['counter_champs'],
         'strong_against' : champ['strong_against']})
     return jsonify(output)
+
+@app.route('/champion', methods=['GET'])
+def getChampion():
+    """
+    Function for an API GET Request by name 
+    """
+    champ_name = request.args.get("name")
+    client = pymongo.MongoClient(get_key())
+    data_base = client['Collection']
+    champions = data_base["Champions"]
+    output = []
+    champ = champions.find_one({'name' : champ_name})
+    if champ:
+        output.append({"name" : champ['name'],
+        'win_rate' :  champ['win_rate'],
+        'pick_rate' : champ['pick_rate'],
+        'counter_champs' : champ['counter_champs'],
+        'strong_against' : champ['strong_against']})
+        return jsonify(output)
+    output.append({'time' : datetime.datetime.now(), 'status' : 400,
+                       'message' : 'Get Failed.'})
+    return jsonify(output)
+
+"""PUT request for champion."""
+@app.route('/champion', methods=['PUT'])
+def put_book_info():
+    id_ = request.args.get("name") # @UndefinedVariable
+    update_values = request.get_json()
+    if id_ is None or update_values is None or len(request.args) > 1:
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    s = Sender()
+    result = s.get_books_collection().update({'name' : id_}, {"$set": update_values})
+    
+    if not result["updatedExisting"]:
+        error = {
+                "status": 500,
+                "error":"Internal Server Error",
+                "message":"No champions found with given name"
+                }
+        
+        return error
+    
+    return "updated champion entry: " + id_
+
+"""POST request for champion."""
+@app.route('/champion', methods=['POST'])
+def make_new_book_info():
+    update_values = request.get_json()
+    send = Sender()
+    
+    if update_values is None or len(request.args) > 0 or not send.valid_book(request.get_json()):
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    r = send.get_books_collection().update({'name' : update_values['name']}, {"$setOnInsert":update_values}, upsert=True)
+    
+    if r["updatedExisting"]:
+        error = {
+                "status": 500,
+                "error":"Internal Server Error",
+                "message":"Champion entry already exists"
+                }
+        
+        return error
+    
+    return jsonify({'result' : update_values})
+
+"""DELETE a champion."""
+@app.route('/champion', methods=['DELETE'])
+def delete_book():
+    _id = request.args.get("name") # @UndefinedVariable
+    
+    if _id is None or len(request.args) > 1:
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    send = Sender()
+    result = send.get_books_collection().remove({"name" : _id})
+    
+    return "deleted champion with name " + _id
+
