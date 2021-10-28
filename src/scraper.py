@@ -25,9 +25,9 @@ class Scraper:
         temp = []
         retArr = []
         for x in champion_links:
-            temp.append(x['href'])
+            temp.append(x['href'] + "/" + x.find('span').text.strip().lower() + "/build")
         for link in temp:
-            retArr.append('op.gg'+ link)
+            retArr.append('http://op.gg'+ link)
         return retArr
         
     #the individual scraping of each champion page of op.gg

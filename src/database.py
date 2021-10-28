@@ -31,8 +31,14 @@ def database_handler(ret_arr1):
 def main():
     s = Scraper()
     arr = s.scrape_champion_links()
-    for x in arr:
-        retArr = s.scrape_champion_page(x)
+    c_counter = 0
+    N = len(arr)
+    while(c_counter < N):
+        print("we are scraping " + arr[c_counter])
+        retArr = s.scrape_champion_page(arr[c_counter])
+        if retArr is None:
+            continue
+        c_counter+=1;
         time.sleep(10)
         database_handler(retArr)
 
