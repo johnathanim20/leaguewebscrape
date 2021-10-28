@@ -1,7 +1,8 @@
 import pymongo
 import os
 from dotenv import load_dotenv
-
+from scraper import Scraper
+import time
 def get_key():
     """
     This function gets the unique key to access the MongoDB database collection
@@ -27,3 +28,13 @@ def database_handler(ret_arr1):
         collection.update(champ, champ, upsert = True)
 
 
+def main():
+    s = Scraper()
+    arr = s.scrape_champion_links()
+    for x in arr:
+        retArr = s.scrape_champion_page(x)
+        time.sleep(10)
+        database_handler(retArr)
+
+if __name__ == "__main__":
+    main()
