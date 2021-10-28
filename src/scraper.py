@@ -14,7 +14,8 @@ class Scraper:
     #This Function is the Constructor of the Scrape Class
     def __init__(self):
         print("scraper start")
-
+    
+    #this function scrapes the links of all champion pages of all the champions on op.gg
     def scrape_champion_links(self):
         url = 'https://na.op.gg/champion/statistics'
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
@@ -29,6 +30,7 @@ class Scraper:
             retArr.append('op.gg'+ link)
         print(retArr)
         
+    #the individual scraping of each champion page of op.gg
     def scrape_champion_page(self, url):
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
         request = requests.get(url, headers=headers)
