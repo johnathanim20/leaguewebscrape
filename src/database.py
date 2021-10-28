@@ -21,20 +21,9 @@ def database_handler(ret_arr1):
                 "win_rate" : ret_arr1[1],
                 "pick_rate" : ret_arr1[2],
                 "champ_tier" : ret_arr1[3],
-                "strong_against" : ret_arr1[4],
-                "counter_champs" : ret_arr1[5],
+                "counter_champs" : ret_arr1[4],
+                "strong_against" : ret_arr1[5],
                 }
         collection.update(champ, champ, upsert = True)
-        
-def main():
-    arr = []
-    arr.append("Aatrox")
-    arr.append("12%")
-    arr.append("56%")
-    arr.append("hi")
-    arr.append("bye")
-    arr.append("yo")
-    database_handler(arr)
 
-if __name__ == "__main__":
-    main()
+
