@@ -1,13 +1,18 @@
+'''
+database handler that uses enviroment variables to hide our key for our database from github
+'''
 import pymongo
 import os
 from dotenv import load_dotenv
 from scraper import Scraper
 import time
+
 def get_key():
     """
     This function gets the unique key to access the MongoDB database collection
+    be in src in terminal
     """
-    load_dotenv('C:\\Users\\johna\\fa21-cs242-project\\src\\key.env')
+    load_dotenv('./key.env')
     return os.getenv("SECRET_KEY")
 
 def database_handler(ret_arr1):
@@ -26,21 +31,3 @@ def database_handler(ret_arr1):
                 "strong_against" : ret_arr1[5],
                 }
         collection.update(champ, champ, upsert = True)
-
-
-def main():
-    s = Scraper()
-    arr = s.scrape_champion_links()
-    c_counter = 0
-    N = len(arr)
-    while(c_counter < N):
-        print("we are scraping " + arr[c_counter])
-        retArr = s.scrape_champion_page(arr[c_counter])
-        if retArr is None:
-            continue
-        c_counter+=1;
-        time.sleep(10)
-        database_handler(retArr)
-
-if __name__ == "__main__":
-    main()

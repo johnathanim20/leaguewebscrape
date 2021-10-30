@@ -1,7 +1,7 @@
 '''
 set FLASK_APP=src/api
 flask run
-@author: Whoat
+api for our champions application
 '''
 
 import datetime

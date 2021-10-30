@@ -1,8 +1,3 @@
-'''
-Created on Oct 28, 2021
-
-@author: johna, paul
-'''
 """
 Implements the scraping of data from op.gg
 """
@@ -32,6 +27,7 @@ class Scraper:
         
     #the individual scraping of each champion page of op.gg
     def scrape_champion_page(self, url):
+        print("we are scraping " + url)
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
         request = requests.get(url, headers=headers)
         soup = bs(request.text, 'html.parser')
