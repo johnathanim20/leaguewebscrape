@@ -40,3 +40,9 @@ def get_collection():
     data_base = client['Collection']
     champions = data_base["Champions"]
     return champions
+
+#This Function checks if doc is author doc  
+def valid_champ(doc):
+    return (bool(doc.get('name')) and bool(doc.get('pick_rate')) and bool(doc.get('win_rate'))
+            and bool(doc.get('champ_tier')) and bool(doc.get("counter_champs"))
+            and bool(doc.get("strong_against")))

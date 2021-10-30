@@ -10,7 +10,7 @@ import json
 import pymongo
 import argparse
 from flask import Flask, request, jsonify, render_template
-from database import get_key, get_collection
+from database import get_key, get_collection, valid_champ
 
 
 app = Flask(__name__)
@@ -86,7 +86,7 @@ def put_champion():
 def make_new_champion():
     update_values = request.get_json()
     
-    if update_values is None or len(request.args) > 0 or not send.valid_book(request.get_json()):
+    if update_values is None or len(request.args) > 0 or not valid_champ(request.get_json()):
         bad_input_error = {
                 "status": 400,
                 "error":"Bad Request"
