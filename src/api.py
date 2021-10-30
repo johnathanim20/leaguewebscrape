@@ -10,7 +10,7 @@ import json
 import pymongo
 import argparse
 from flask import Flask, request, jsonify, render_template
-from database import get_key
+from database import get_key, get_collection
 
 
 app = Flask(__name__)
@@ -20,9 +20,8 @@ def getAllChampions():
     """
     Function for an API Get Request
     """
-    client = pymongo.MongoClient(get_key())
-    data_base = client['Collection']
-    champions = data_base["Champions"]
+    
+    champions = get_collection()
     output = []
     if champions.find() is None:
         output.append({'time' : datetime.datetime.now(), 'status' : 400,
@@ -34,7 +33,7 @@ def getAllChampions():
         'pick_rate' : champ['pick_rate'],
         'counter_champs' : champ['counter_champs'],
         'strong_against' : champ['strong_against']})
-    return jsonify(output)
+    return jsonify({'result' : output})
 
 @app.route('/champion', methods=['GET'])
 def getChampion():
@@ -42,9 +41,7 @@ def getChampion():
     Function for an API GET Request by name 
     """
     champ_name = request.args.get("name")
-    client = pymongo.MongoClient(get_key())
-    data_base = client['Collection']
-    champions = data_base["Champions"]
+    champions = get_collection()
     output = []
     champ = champions.find_one({'name' : champ_name})
     if champ:
@@ -56,11 +53,11 @@ def getChampion():
         return jsonify(output)
     output.append({'time' : datetime.datetime.now(), 'status' : 400,
                        'message' : 'Get Failed.'})
-    return jsonify(output)
+    return jsonify({'result' : output})
 
 """PUT request for champion."""
 @app.route('/champion', methods=['PUT'])
-def put_book_info():
+def put_champion():
     id_ = request.args.get("name") # @UndefinedVariable
     update_values = request.get_json()
     if id_ is None or update_values is None or len(request.args) > 1:
@@ -71,8 +68,7 @@ def put_book_info():
         
         return bad_input_error
     
-    s = Sender()
-    result = s.get_books_collection().update({'name' : id_}, {"$set": update_values})
+    result = get_collection().update({'name' : id_}, {"$set": update_values})
     
     if not result["updatedExisting"]:
         error = {
@@ -87,9 +83,8 @@ def put_book_info():
 
 """POST request for champion."""
 @app.route('/champion', methods=['POST'])
-def make_new_book_info():
+def make_new_champion():
     update_values = request.get_json()
-    send = Sender()
     
     if update_values is None or len(request.args) > 0 or not send.valid_book(request.get_json()):
         bad_input_error = {
@@ -99,7 +94,7 @@ def make_new_book_info():
         
         return bad_input_error
     
-    r = send.get_books_collection().update({'name' : update_values['name']}, {"$setOnInsert":update_values}, upsert=True)
+    r = get_collection().update({'name' : update_values['name']}, {"$setOnInsert":update_values}, upsert=True)
     
     if r["updatedExisting"]:
         error = {
@@ -114,7 +109,7 @@ def make_new_book_info():
 
 """DELETE a champion."""
 @app.route('/champion', methods=['DELETE'])
-def delete_book():
+def delete_champion():
     _id = request.args.get("name") # @UndefinedVariable
     
     if _id is None or len(request.args) > 1:
@@ -125,8 +120,7 @@ def delete_book():
         
         return bad_input_error
     
-    send = Sender()
-    result = send.get_books_collection().remove({"name" : _id})
+    get_collection().remove({"name" : _id})
     
     return "deleted champion with name " + _id
 

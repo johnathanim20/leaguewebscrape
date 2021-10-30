@@ -31,3 +31,12 @@ def database_handler(ret_arr1):
                 "strong_against" : ret_arr1[5],
                 }
         collection.update(champ, champ, upsert = True)
+
+def get_collection():
+    """
+    this function returns the collection of database
+    """
+    client = pymongo.MongoClient(get_key())
+    data_base = client['Collection']
+    champions = data_base["Champions"]
+    return champions
