@@ -35,7 +35,7 @@ class TestFinal(unittest.TestCase):
         self.assertFalse(valid_champ(doc))
         
     def test_add_champ(self):
-        """Test API POST  """    
+        """Test API POST Request"""    
         test_champ = {
             "name":"Lex",
             "pick_rate" : "5.7%",
@@ -47,6 +47,7 @@ class TestFinal(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         
     def test_invalid_add_champ(self):
+        """Test Invalid API POST Request""" 
         test_champ = {
             "name":"Lex",
             "pick_rate" : "5.7%",
@@ -60,22 +61,27 @@ class TestFinal(unittest.TestCase):
        
     
     def test_get_champs(self):
+        """Test API GET All Champs Request""" 
         response = requests.get('http://127.0.0.1:5000/champions')
         self.assertEqual(response.status_code, 200)
     
     def test_invalid_get_champs(self):
+        """Test invalid API GET All Champs Request""" 
         response = requests.get('http://127.0.0.1:5000/champions', params = {'name' : "Aatrox"})
         self.assertEqual(response.json()['status'], 400)
         
     def test_get_champ(self):
+        """Test API GET Request""" 
         response = requests.get('http://127.0.0.1:5000/champion', params = {'name' : "Aatrox"})
         self.assertEqual(response.status_code, 200)
         
     def test_invalid_get_champ(self):
+        """Test invalid API GET Request""" 
         response = requests.get('http://127.0.0.1:5000/champion', params = {'name' : "invalid_name"})
         self.assertEqual(response.json()['result'][0]['status'], 400)
        
     def test_update_champ(self):
+        """Test API PUT Request""" 
         test_champ = {
             "name":"Lex",
             "pick_rate" : "5.7%",
@@ -87,6 +93,7 @@ class TestFinal(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         
     def test_invalid_update_champ(self):
+        """Test Invalid API PUT Request""" 
         test_champ = {
             "name":"Lex",
             "pick_rate" : "5.7%",
@@ -98,79 +105,65 @@ class TestFinal(unittest.TestCase):
         self.assertEqual(response.json()['status'], 400)
     
     def test_delete_champ(self):
+        """Test API DELETE Request"""
         response = requests.delete('http://127.0.0.1:5000/champion', params = {'name' : "Lex"})
         self.assertEqual(response.status_code, 200)
     
     def test_invalid_delete_champ(self):
+        """Test invalid API DELETE Request"""
         response = requests.delete('http://127.0.0.1:5000/champion', params = {'name' : "Lex", 'invalid': 'invalid'})
         self.assertEqual(response.json()['status'], 400)
         
         
     def test_scrape_champ1(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/nasus/statistics/top/build'
         ret_arr = s.scrape_champion_page(url)
         self.assertEqual(ret_arr[0], 'Nasus')
     def test_scrape_champ2(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/aatrox/statistics/top/build'
         ret_arr = s.scrape_champion_page(url)
         self.assertEqual(ret_arr[0], 'Aatrox')
     def test_scrape_champ3(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/graves/statistics/top/build'
         ret_arr = s.scrape_champion_page(url)
         self.assertEqual(ret_arr[0], 'Graves')
     
     def test_scrape_champ4(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/akali/statistics/mid/build'
         ret_arr = s.scrape_champion_page(url)
         self.assertEqual(ret_arr[0], 'Akali')
         
     def test_scrape_champ5(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/zed/statistics/mid/build'
         ret_arr = s.scrape_champion_page(url) 
         self.assertEqual(ret_arr[0], 'Zed')
     
     def test_scrape_champ6(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/lucian/statistics/mid/build'
         ret_arr = s.scrape_champion_page(url) 
         self.assertEqual(ret_arr[0], 'Lucian')
     
     def test_scrape_champ7(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/kennen/statistics/top/build'
         ret_arr = s.scrape_champion_page(url) 
         self.assertEqual(ret_arr[0], 'Kennen')
     
     def test_scrape_champ8(self):
-        """
-        test
-        """
+        """Test Scraping a Champion"""
         s = Scraper()
         url = 'https://na.op.gg/champion/zoe/statistics/mid/build'
         ret_arr = s.scrape_champion_page(url) 
