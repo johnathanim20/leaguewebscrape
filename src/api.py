@@ -20,7 +20,13 @@ def getAllChampions():
     """
     Function for an API Get Request
     """
-    
+    if len(request.args) > 0 :
+        bad_input_error = {
+                'status': 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
     champions = get_collection()
     output = []
     if champions.find() is None:
