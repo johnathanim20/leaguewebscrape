@@ -9,11 +9,29 @@ import requests
 import json
 import pymongo
 import argparse
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from database import get_key, get_collection, valid_champ
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
+
+@app.route('/')
+def home():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "index.html")
+
+@app.route('/PRVisual')
+def pr_champ_vis():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "pr_champion_visual.html")
+
+@app.route('/WRVisual')
+def wr_champ_vis():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "wr_champion_visual.html")
 
 @app.route('/champions', methods=['GET'])
 def getAllChampions():
@@ -129,4 +147,7 @@ def delete_champion():
     get_collection().remove({"name" : _id})
     
     return "deleted champion with name " + _id
+
+if __name__ == '__main__':
+    app.run(debug=False)
 
