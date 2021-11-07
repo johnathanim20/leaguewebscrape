@@ -13,7 +13,8 @@ def get_key():
     be in src in terminal
     """
     load_dotenv('./key.env')
-    return os.getenv("SECRET_KEY")
+    #return os.getenv("SECRET_KEY")
+    return "mongodb+srv://JohnIm:4MY7jaApcsPmj4Kl@cluster0.0fsik.mongodb.net/Cluster0?ssl=true&ssl_cert_reqs=CERT_NONE"
 
 def database_handler(ret_arr1):
     """
