@@ -33,7 +33,7 @@ class Query(object):
             raise ValueError('too many operators')
         else:
             field = field[0]
-        field_value_pattern = re.compile(r'\:((\s[>,<]{1}\s[0-9]+)|(\"[a-zA-Z0-9]+\")|([a-zA-Z0-9]+)|(\sNOT\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sAND\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sOR\s[a-zA-Z0-9]+))$')
+        field_value_pattern = re.compile(r'\:((\s[>,<]{1}\s[0-9]+)|(\"[a-zA-Z0-9]+\")|([a-zA-Z0-9]+\s[a-zA-Z0-9]*)|(\sNOT\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sAND\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sOR\s[a-zA-Z0-9]+))$')
         content = re.search(field_value_pattern, input_string)
         
         if content is None:
@@ -79,6 +79,7 @@ class Query(object):
         field = field.strip()
         content = content.replace(":","")
         print(obj, field, content)
+        print(content)
         if "<" in content:
             return self.handle_less(obj, field, content)
         elif ">" in content:
@@ -125,66 +126,10 @@ class Query(object):
         collection = self.get_collection(obj)
         
         for i in collection.find():
-            if int(i[field]) < int(cont):
+            if float(i[field].strip('%')) < float(cont):
                 collection_list.append(i)
-                
         return collection_list
     
-    def handle_quotes(self, obj, field, content):
-        tmp = '"'
-        cont = self.clean_content(content,tmp)
-        print(cont)
-        collection_list = []
-        collection = self.get_collection(obj)
-        
-        for i in collection.find():
-            if i[field] == cont:
-                collection_list.append(i)
-            
-        return collection_list 
-    
-    #USE SPLIT
-    def handle_and(self, obj, field, content):
-        cont = content.split(" ")
-        condition_1 = cont[0]
-        condition_2 = cont[2]
-        
-        collection_list = []
-        collection = self.get_collection(obj)
-        
-        for i in collection.find():
-            if condition_1 in i[field] and condition_2 in i[field]:
-                collection_list.append(i)
-        
-        return collection_list 
-    
-    def handle_or(self, obj, field, content):
-        cont = content.split(" ")
-        condition_1 = cont[0]
-        condition_2 = cont[2]
-        
-        collection_list = []
-        collection = self.get_collection(obj)
-        
-        for i in collection.find():
-            if condition_1 in i[field] or condition_2 in i[field]:
-                collection_list.append(i)
-        
-        return collection_list 
-    
-    def handle_not(self, obj, field, content):
-        cont = content.strip()
-        cont = cont.split(" ")
-        cont = cont[1]
-        
-        collection_list = []
-        collection = self.get_collection(obj)
-        
-        for i in collection.find():
-            if cont not in i[field]:
-                collection_list.append(i)
-                
-        return collection_list
     
     def handle_standard(self,obj, field, content):
         cont = content
@@ -202,6 +147,6 @@ class Query(object):
     
 if __name__ == '__main__':
     D = Query()
-    obj, f, c = D.parse_user_input('champion.name:Akal')
+    obj, f, c = D.parse_user_input('champion.win_rate: < 79')
     print(obj, f, c)
     print(D.query_handler(obj, f, c))
