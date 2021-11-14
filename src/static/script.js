@@ -141,6 +141,7 @@ function getChamp(name) {
 }
 					
 function addTable(arr2) {
+  document.querySelector('#myDynamicTable').innerHTML = "";
   arr = arr2
   setTimeout(function(){
   	  document.querySelector('#myDynamicTable').innerHTML = "";
@@ -181,5 +182,5 @@ function addTable(arr2) {
 
 
 function clearValues() {
-	document.querySelector('#championGet').innerHTML = "";
+	document.querySelector('#myDynamicTable').innerHTML = "";
 }
