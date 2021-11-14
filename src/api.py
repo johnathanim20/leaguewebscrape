@@ -130,8 +130,8 @@ def getChampion():
         'strong_against' : champ['strong_against']})
         return jsonify(output)
     output.append({'time' : datetime.datetime.now(), 'status' : 400,
-                       'message' : 'Get Failed.'})
-    return jsonify({'result' : output})
+                       'message' : 'Champion does not exist.'})
+    return jsonify(output)
 
 """PUT request for champion."""
 @app.route('/champion', methods=['PUT'])
@@ -167,7 +167,8 @@ def make_new_champion():
     if update_values is None or len(request.args) > 0 or not valid_champ(request.get_json()):
         bad_input_error = {
                 "status": 400,
-                "error":"Bad Request"
+                "error":"Bad Request",
+                "message":"Bad Request"
                 }
         
         return bad_input_error
@@ -193,7 +194,8 @@ def delete_champion():
     if _id is None or len(request.args) > 1:
         bad_input_error = {
                 "status": 400,
-                "error":"Bad Request"
+                "error":"Bad Request",
+                "message":"Bad Request"
                 }
         
         return bad_input_error
