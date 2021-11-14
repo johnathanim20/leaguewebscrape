@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>Pick Rate Page</title>
+		<script src="https://d3js.org/d3.v7.min.js"></script>
+		<script src="../static/pickrate.js"></script>
 	</head>
 	<body>
 		<h1> Top k Champions by Pick Rate </h1>
@@ -12,7 +14,8 @@
 		<h1>Pick k below</h1>
 		<label>k:</label>
 		<input type="text" id="k" name="k"><br><br>
-		<button>Generate Graph</button>
-			  
+		<button type = "button" onclick="pickrate(k.value)" style="height:50px; width:720px">Generate Graph</button><br><br>
+		<svg width="500" height="500"></svg>
+		
 	</body>
 </html>
