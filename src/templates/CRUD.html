@@ -4,12 +4,32 @@
 		<title>CRUD</title>
 	</head>
 	<body>
-		
 		<nav>
-			<a href="/">homepage</a> 
-			
+			<a href="/">homepage</a>
+
 		</nav>
-		
-			  
+		<h1>CRUD</h1>
+		<form>
+  		  <label>Champion Name:</label>
+		  <input type="text" id="cname" name="cname"><br><br>
+		  <label>Win Rate:</label>
+		  <input type="text" id="wr" name="wr"><br><br>
+		  <label>Pick Rate:</label>
+		  <input type="text" id="pr" name="pr"><br><br>
+		  <label>Champion Tier:</label>
+		  <input type="text" id="ct" name="ct"><br><br>
+		  <label>Counter Champs(e.g Maokai, Yasuo, Zed):</label>
+		  <input type="text" id="cc" name="cc"><br><br>
+		  <label>Strong Against Champs(e.g Maokai,Yasuo,Zed):</label>
+		  <input type="text" id="sc" name="sc"><br><br>
+
+		</form>
+		<button onclick=update(cname.value,[wr.value,pr.value,ct.value,cc.value,sc.value])>UPDATE</button>
+		<button>CREATE</button>
+		<button>DELETE</button>
+		<button onclick=scrape()>SCRAPE</button>
+		<h1>Results</h1>
+		<div id="assesment"></div>
+		<script src="../static/crud.js"></script>
 	</body>
 </html>
