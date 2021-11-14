@@ -92,6 +92,7 @@ def getAllChampions():
         output.append({"name" : champ['name'],
         'win_rate' :  champ['win_rate'],
         'pick_rate' : champ['pick_rate'],
+        'champ_tier' : champ['champ_tier'],
         'counter_champs' : champ['counter_champs'],
         'strong_against' : champ['strong_against']})
     return jsonify({'result' : output})
@@ -109,6 +110,7 @@ def getChampion():
         output.append({"name" : champ['name'],
         'win_rate' :  champ['win_rate'],
         'pick_rate' : champ['pick_rate'],
+        'champ_tier' : champ['champ_tier'],
         'counter_champs' : champ['counter_champs'],
         'strong_against' : champ['strong_against']})
         return jsonify(output)
