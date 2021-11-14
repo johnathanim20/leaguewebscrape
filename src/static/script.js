@@ -113,6 +113,7 @@ function test(querystring) {
 function addTable(arr2) {
   arr = arr2
   setTimeout(function(){
+  	  document.querySelector('#myDynamicTable').innerHTML = "";
 	  var myTableDiv = document.getElementById("myDynamicTable");
 	
 	  var table = document.createElement('TABLE');
