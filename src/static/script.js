@@ -84,7 +84,7 @@ function handleGetQuery(querystring) {
 		});	
 }
 
-function test(querystring) {
+function query(querystring) {
 	var u = "http://127.0.0.1:5000/search?q=" + querystring
 	console.log(u)
 	var dict = [];
@@ -96,17 +96,47 @@ function test(querystring) {
 			return response.json();
     	}).then(data=> {
 			console.log(data)
-			for (x = 0; x < data.result.length; x++) {
+			
 				const html = data.result.map(champ => {
 					dict.push({
 					name : champ.name,
 					win_rate : champ.win_rate,
 					pick_rate : champ.pick_rate,
-					champ_tier : champ.champ_tier
+					champ_tier : champ.champ_tier,
+					counter_champs:champ.counter_champs,
+					strong_against:champ.strong_against
 					})
 				});
 				addTable(dict)
+		
+		})
+}
+
+function getChamp(name) {
+	console.log(name)
+	var u = "http://127.0.0.1:5000/champion?name="+name
+	console.log(u)
+	var dict = [];
+	fetch(u)
+		.then(response => {
+		console.log(response)
+			if (!response.ok) {
+				throw Error("ERROR");
 			}
+			return response.json();
+    	}).then(data=> {
+    		console.log(data);
+    		const html = data.map(champ => {
+					dict.push({
+					name : champ.name,
+					win_rate : champ.win_rate,
+					pick_rate : champ.pick_rate,
+					champ_tier : champ.champ_tier,
+					counter_champs:champ.counter_champs,
+					strong_against:champ.strong_against
+					})
+				});
+				addTable(dict)
 		})
 }
 					
@@ -118,17 +148,30 @@ function addTable(arr2) {
 	
 	  var table = document.createElement('TABLE');
 	  table.border = '1';
-	
+	  const a = ["name","pick_rate","win_rate","champ_tier","counter_champs","strong_against"];
+	  
+	  
 	  var tableBody = document.createElement('TBODY');
 	  table.appendChild(tableBody);
-	
-	  for (var i = 0; i < 3; i++) {
+	  
+	  var tr = document.createElement('TR');
+	  tableBody.appendChild(tr);
+	  for (var j = 0; j < 6; j++) {
+		  var td = document.createElement('TD');
+		  td.width = '75';
+		  td.appendChild(document.createTextNode(a[j]));
+		  tr.appendChild(td);
+	  }
+	  
+	  
+	  for (var i = 0; i < arr.length; i++) {
 	    var tr = document.createElement('TR');
 	    tableBody.appendChild(tr);
-	    for (var j = 0; j < 4; j++) {
+	    for (var j = 0; j < 6; j++) {
 	      var td = document.createElement('TD');
 	      td.width = '75';
-	      td.appendChild(document.createTextNode(arr[j]['name']));
+	      
+	      td.appendChild(document.createTextNode(arr[i][a[j]]));
 	      tr.appendChild(td);
 	    }
 	  }
