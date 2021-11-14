@@ -9,6 +9,7 @@ import requests
 import json
 import pymongo
 import argparse
+from query_parser import Query
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from database import get_key, get_collection, valid_champ
 
@@ -33,6 +34,42 @@ def wr_champ_vis():
     #return render_template("index.html")
     return send_from_directory('templates', "wr_champion_visual.html")
 
+
+"""GET request for search and a query."""
+@app.route('/search')
+def get_search():
+    query = request.args.get("q") # @UndefinedVariable
+    query_parse = Query()
+    
+    if query is None or len(request.args) > 1:
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    query_info = query_parse.parse_user_input(query)
+    query_result = query_parse.query_handler(query_info[0], query_info[1], query_info[2])
+    if not query_result:
+        error = {
+                "status": 500,
+                "error":"Internal Server Error",
+                "message":"No entries found with given query"
+                }
+        
+        return error
+        
+    query_result_cleaned = []
+    
+    for i in query_result:
+        tmp = {}
+        for j in i.keys():
+            if j != "_id":
+                tmp[j] = i[j]
+        query_result_cleaned.append(tmp)
+    
+    return  jsonify({'result' : query_result_cleaned})
 @app.route('/champions', methods=['GET'])
 def getAllChampions():
     """
