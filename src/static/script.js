@@ -105,14 +105,13 @@ function test(querystring) {
 					champ_tier : champ.champ_tier
 					})
 				});
-				console.log(dict);
-				return dict;
+				addTable(dict)
 			}
 		})
 }
 					
-function addTable(querystring) {
-  arr = test(querystring);
+function addTable(arr2) {
+  arr = arr2
   setTimeout(function(){
 	  var myTableDiv = document.getElementById("myDynamicTable");
 	
@@ -128,7 +127,7 @@ function addTable(querystring) {
 	    for (var j = 0; j < 4; j++) {
 	      var td = document.createElement('TD');
 	      td.width = '75';
-	      td.appendChild(document.createTextNode(arr['0']['name']));
+	      td.appendChild(document.createTextNode(arr[j]['name']));
 	      tr.appendChild(td);
 	    }
 	  }
