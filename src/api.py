@@ -3,7 +3,7 @@ set FLASK_APP=src/api
 flask run
 api for our champions application
 '''
-
+import pprint
 import datetime
 import requests
 import json
@@ -12,28 +12,46 @@ import argparse
 from query_parser import Query
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from database import get_key, get_collection, valid_champ
+import scrape_exe
 
 
 app = Flask(__name__, static_folder="static")
 
 @app.route('/')
 def home():
+    """
+    this function serves our html template of our homepage
+    """
     #file_template = send_from_directory('client', "index.html")
     #return render_template("index.html")
     return send_from_directory('templates', "index.html")
 
 @app.route('/PRVisual')
 def pr_champ_vis():
+    """
+    this function returns the html template of our bar graph page for pick rate
+    """
     #file_template = send_from_directory('client', "index.html")
     #return render_template("index.html")
     return send_from_directory('templates', "pr_champion_visual.html")
 
 @app.route('/WRVisual')
 def wr_champ_vis():
+    """
+    this function returns the html template of our bar graph page for win rate
+    """
     #file_template = send_from_directory('client', "index.html")
     #return render_template("index.html")
     return send_from_directory('templates', "wr_champion_visual.html")
 
+@app.route('/CRUD')
+def crud_operations():
+    """
+    this function returns the html templateof our CRUD operations
+    """
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "CRUD.html")
 
 """GET request for search and a query."""
 @app.route('/search')
@@ -63,17 +81,14 @@ def get_search():
     query_result_cleaned = []
     
     for i in query_result:
-        tmp = {}
-        for j in i.keys():
-            if j != "_id":
-                tmp[j] = i[j]
-        query_result_cleaned.append(tmp)
+        query_result_cleaned.append(i)
     
     return  jsonify({'result' : query_result_cleaned})
 @app.route('/champions', methods=['GET'])
+
 def getAllChampions():
     """
-    Function for an API Get Request
+    Function for an API Get Request to get all champ docs in database
     """
     if len(request.args) > 0 :
         bad_input_error = {
@@ -183,9 +198,36 @@ def delete_champion():
         
         return bad_input_error
     
-    get_collection().remove({"name" : _id})
+    result = get_collection().remove({"name" : _id})
+    
+    if result["n"] == 0:
+        error = {
+                "status": 500,
+                "error":"Internal Server Error",
+                "message":"Champion entry already deleted"
+                }
+        
+        return error
     
     return "deleted champion with name " + _id
+
+"""activates scrape function in scrape_exe module"""
+@app.route('/scrape', methods=['POST'])
+def scrape_new_entries():
+    
+    if len(request.args) > 0:
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    scrape_exe.main()
+    
+    
+    return "scraping done"
+
 
 if __name__ == '__main__':
     app.run(debug=False)
