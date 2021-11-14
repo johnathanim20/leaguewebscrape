@@ -1,18 +1,21 @@
 <!doctype html>
 <html>
 	<head>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="../static/wr_visual.js"></script>
 		<title>Win Rate Page</title>
 	</head>
 	<body>
 		<h1> Top k Champions by Win Rate </h1>
 		<nav>
-			<a href="/">homepage</a> 
-			
+			<a href="/">homepage</a>
+
 		</nav>
 		<h1>Pick k below</h1>
 		<label>k:</label>
 		<input type="text" id="k" name="k"><br><br>
-		<button>Generate Graph</button>
-			  
+		<button onclick= winrate(k.value)>Generate Graph</button><br><br>
+		<svg width="500" height="500"></svg>
+
 	</body>
 </html>
