@@ -2,14 +2,17 @@ import re
 from database import get_collection
 class Query(object):
     '''
-    classdocs
+    QUERY class handles our query parsing for our application and is heavily based on the
+    query parser produced in assignment 2
     '''
-
-
     def __init__(self):
         print("query start")
         
     def parse_user_input(self, input_string):
+        """
+        Function to check if the user input is a valid query and breaks query into
+        object, field and content
+        """
         form = re.compile(r"^[a-zA-Z]+\.[a-zA-Z\_]+\:.*$")
         f = re.search(form, input_string)
         if f is None:
@@ -33,7 +36,7 @@ class Query(object):
             raise ValueError('too many operators')
         else:
             field = field[0]
-        field_value_pattern = re.compile(r'\:((\s[>,<]{1}\s[0-9]+)|(\"[a-zA-Z0-9]+\")|([a-zA-Z0-9]+\s[a-zA-Z0-9]*)|(\sNOT\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sAND\s[a-zA-Z0-9]+)|([a-zA-Z0-9]+\sOR\s[a-zA-Z0-9]+))$')
+        field_value_pattern = re.compile(r'\:((\s[>,<]{1}\s[0-9]+)|([a-zA-Z0-9]+\s{0,1}[a-zA-Z0-9]*))$')
         content = re.search(field_value_pattern, input_string)
         
         if content is None:
@@ -44,6 +47,9 @@ class Query(object):
         return obj, field, content
     
     def valid_parse(self, obj, field):
+        """
+        Checks the values of the parsed object, field, and content
+        """
         obj_tmp = obj.replace('.',"")
         obj_tmp = obj_tmp.strip()
         
@@ -70,6 +76,10 @@ class Query(object):
         return None
     
     def query_handler(self, obj, field, content):
+        """
+        cleans the object, field, content and
+        then calls the right function to properly handle the query
+        """
         self.valid_parse(obj, field)
         obj = obj.replace('.',"")
         obj = obj.strip()
@@ -84,69 +94,70 @@ class Query(object):
             return self.handle_less(obj, field, content)
         elif ">" in content:
             return self.handle_greater(obj, field, content)
-        elif '"' in content:
-            return self.handle_quotes(obj, field, content)
-        elif "AND" in content:
-            return self.handle_and(obj, field, content)
-        elif "OR" in content:
-            return self.handle_or(obj, field, content)
-        elif "NOT" in content:
-            return self.handle_not(obj, field, content)
         else:
             return self.handle_standard(obj, field, content)
         
-    def is_num(self, input_string):
-        for c in input_string:
-            if c.isdigit():
-                input_string = int(input_string)
-                return input_string
-        return input_string
-        
     def clean_content(self, content, tmp):
+        """
+        cleans the content for the functions
+        """
         cont = content.replace(tmp,"")
         cont = cont.strip()
         return cont
     
     def handle_greater(self, obj, field, content):
+        """
+        handles the greater than function
+        """
         tmp = ">"
         cont = self.clean_content(content,tmp)
         collection_list = []
         collection = self.get_collection(obj)
         
-        for i in collection.find():
-            if int(i[field]) > int(cont):
+        for i in collection.find({},{'_id':0}):
+            if float(i[field].strip('%')) > float(cont):
                 collection_list.append(i)
                 
         return collection_list
     
     def handle_less(self, obj, field, content):
+        """
+        handles the less than function
+        """
         tmp = "<"
         cont = self.clean_content(content,tmp)
         collection_list = []
         collection = self.get_collection(obj)
         
-        for i in collection.find():
+        for i in collection.find({},{'_id':0}):
             if float(i[field].strip('%')) < float(cont):
                 collection_list.append(i)
+                
         return collection_list
     
     
     def handle_standard(self,obj, field, content):
+        """
+        handles the normal operation without any symbols
+        """
         cont = content
         collection_list = []
         collection = self.get_collection(obj)
         
-        for i in collection.find():
+        for i in collection.find({},{"_id":0}):
             if cont in i[field]:
                 collection_list.append(i)
             
         return collection_list
     
     def get_collection(self, obj):
+        """
+        gets the right collection
+        """
         return get_collection()
     
 if __name__ == '__main__':
     D = Query()
-    obj, f, c = D.parse_user_input('champion.win_rate: < 79')
+    obj, f, c = D.parse_user_input('champion.win_rate: > 55')
     print(obj, f, c)
     print(D.query_handler(obj, f, c))

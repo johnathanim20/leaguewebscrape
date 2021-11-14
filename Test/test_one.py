@@ -12,7 +12,7 @@ class TestFinal(unittest.TestCase):
     def setUp(self):
         print("Starting another test.")
     
-    """Test valid_champ() in scrape tell if authors are valid"""    
+    """Test valid_champ() in scrape tell if champs are valid"""    
     def test_valid_champ(self):
         doc = {   "name":"Lex",
                "pick_rate" : "5.7%",
@@ -23,7 +23,7 @@ class TestFinal(unittest.TestCase):
             }
         self.assertTrue(valid_champ(doc))
         
-    """Test valid_champ() in scrape can tell if authors are invalid """    
+    """Test valid_champ() in scrape can tell if champs are invalid """    
     def test_valid_champ_invalid(self):
         doc = {
              "name":"Lex",
