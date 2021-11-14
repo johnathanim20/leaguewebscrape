@@ -1,4 +1,5 @@
 //got help from https://www.youtube.com/watch?v=C4t6qfHZ6Tw
+//grabs top k champs by winrate
 function winrate(k) {
 	url = "http://127.0.0.1:5000/champions";
 	console.log(url)
