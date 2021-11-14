@@ -9,12 +9,67 @@ import requests
 import json
 import pymongo
 import argparse
-from flask import Flask, request, jsonify, render_template
+from query_parser import Query
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from database import get_key, get_collection, valid_champ
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 
+@app.route('/')
+def home():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "index.html")
+
+@app.route('/PRVisual')
+def pr_champ_vis():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "pr_champion_visual.html")
+
+@app.route('/WRVisual')
+def wr_champ_vis():
+    #file_template = send_from_directory('client', "index.html")
+    #return render_template("index.html")
+    return send_from_directory('templates', "wr_champion_visual.html")
+
+
+"""GET request for search and a query."""
+@app.route('/search')
+def get_search():
+    query = request.args.get("q") # @UndefinedVariable
+    query_parse = Query()
+    
+    if query is None or len(request.args) > 1:
+        bad_input_error = {
+                "status": 400,
+                "error":"Bad Request"
+                }
+        
+        return bad_input_error
+    
+    query_info = query_parse.parse_user_input(query)
+    query_result = query_parse.query_handler(query_info[0], query_info[1], query_info[2])
+    if not query_result:
+        error = {
+                "status": 500,
+                "error":"Internal Server Error",
+                "message":"No entries found with given query"
+                }
+        
+        return error
+        
+    query_result_cleaned = []
+    
+    for i in query_result:
+        tmp = {}
+        for j in i.keys():
+            if j != "_id":
+                tmp[j] = i[j]
+        query_result_cleaned.append(tmp)
+    
+    return  jsonify({'result' : query_result_cleaned})
 @app.route('/champions', methods=['GET'])
 def getAllChampions():
     """
@@ -129,4 +184,7 @@ def delete_champion():
     get_collection().remove({"name" : _id})
     
     return "deleted champion with name " + _id
+
+if __name__ == '__main__':
+    app.run(debug=False)
 

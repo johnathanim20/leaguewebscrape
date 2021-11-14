@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Start Page</title>
+	</head>
+	<body>
+		<h1> A League of Legends Statistics Website</h1><br>
+		<nav>
+			<a href="/PRVisual">Top Champions by Pick Rate</a> |
+			<a href="/WRVisual">Top Champions by Win Rate</a>
+		</nav><br><br>
+		 <form>
+	  		  <label>Champion Name:</label><br><br>
+	
+			  <input type="text" id="field" name="name" style="height:50px; width:712px"><br><br>
+			  <button type = "button" onclick="handleGetChamp(field.value)" style="height:50px; width:720px">Get Champ</button><br><br><br><br>
+			  <label>Query (Ex : champion.win_rate: > 55):</label><br><br>
+			  <input type="text" id="field2" name="wr" style="height:50px; width:712px"><br><br>
+			  <button type = "button" onclick="test(field2.value)" style="height:50px; width:720px">Get Query</button><br><br><br><br>
+			  <button type = "button" onclick="clearValues()" style="height:50px; width:720px">Clear Results</button><br><br>
+		  </form>
+		<table>
+		<thead></thead>
+		<tbody></tbody>
+		</table>
+		<h1> Results Below </h1>
+		<div id="championGet"></div>
+		<div id="myDynamicTable"></div>
+	</body>
+	<script src="../static/script.js"></script>
+</html>

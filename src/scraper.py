@@ -9,7 +9,8 @@ class Scraper:
     #This Function is the Constructor of the Scrape Class
     def __init__(self):
         print("scraper start")
-    
+    #got help from https://stackoverflow.com/questions/53652731/getting-http-404-error-when-web-scraping-in-python-3-7 for the headers for user-agent
+    #https://stackoverflow.com/questions/61991072/getting-error-404-while-scraping-using-beautiful-soup-even-though-the-site-exis
     #this function scrapes the links of all champion pages of all the champions on op.gg
     def scrape_champion_links(self):
         url = 'https://na.op.gg/champion/statistics'
