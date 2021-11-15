@@ -62,10 +62,7 @@ function makeBarChart(dataArr) {
         .attr('x', (s) => xScale(s.name))
         .attr('y', (s) => yScale(parseFloat(s.pick_rate)))
         .attr('height', (s) => heightt - 70 - yScale(parseFloat(s.pick_rate)))
-        .attr('width', xScale.bandwidth());
-
-
-
-
+        .attr('width', xScale.bandwidth())
+        .style("fill", '#23f8a8');
 
 }
