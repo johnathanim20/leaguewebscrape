@@ -31,7 +31,7 @@ function scrape() {
 			return response.text;
 		})
 		.then(data => {
-		    const html = `<p>` + data + `</p>`;
+		    const html = `<p> scraping done</p>`;
 		    document.querySelector('#assesment').insertAdjacentHTML('beforeend',html);
 		})
 		.catch(error => {
